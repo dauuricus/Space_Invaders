@@ -23,7 +23,7 @@ BLUE = (80, 255, 239)
 PURPLE = (203, 0, 255)
 RED = (237, 28, 36)
 # スクリーンのサイズをpygame.Surfaceオブジェクトとして渡す
-SCREEN = display.set_mode((800, 600))
+SCREEN = display.set_mode((800, 600),SCALED)
 FONT = FONT_PATH + 'space_invaders.ttf'
 IMG_NAMES = ['ship','shipexplosion1','shipexplosion2','shipexplosion3','mystery',
             'enemy1_1','enemy1_2',
@@ -97,10 +97,10 @@ class Bullet(sprite.Sprite): # 弾
             if current_time > self.timer + 700:
                 self.kill() # 画面の上部で弾の表示を消す
                 
-        if self.rect.y > 595:            
-            self.rect.y = 590
+        if self.rect.y > 585:            
+            self.rect.y = 580
             game.screen.blit(self.image2, self.rect)
-            if current_time - self.timer > 1600:
+            if current_time > self.timer  160:
                 self.kill() # 画面の下部で弾の表示を消す
 
                 
