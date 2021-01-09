@@ -55,22 +55,22 @@ class Ship(sprite.Sprite): # playerのアイコン
         self.vx = SHIP_VX
 
     def update(self, keys, *args): # 画面左右playerが動ける範囲
-        if keys[K_LEFT] and self.rect.x > 10:
+        if keys[K_d] and self.rect.x > 10:
             # self.rect.x -= self.speed # 左移動
             self.vx += self.speed
             self.dist_x = (self.rect.x - self.vx)
             self.rect.x += (-(-(self.dist_x - self.rect.x))//5)
             if self.rect.x < 10: # 画面左端まできたら止まる
                 self.rect.x = 10
-            # キーアップで速度vxを0に戻す check_input()
-        if keys[K_RIGHT] and self.rect.x < 740:
+            # キーアップで速度vxをSHIP_VX(初期値)に戻す check_input()
+        if keys[K_a] and self.rect.x < 740:
             # self.rect.x += self.speed # 右移動
             self.vx += self.speed
             self.dist_x = (self.rect.x + self.vx)
             self.rect.x += (-(-(self.dist_x - self.rect.x))//5)
             if self.rect.x > 740: # 画面右端まできたら止まる
                 self.rect.x = 740
-            # キーアップで速度vxを0に戻す　check_input()
+            # キーアップで速度vxをSHIP_VX(初期値)に戻す　641行目check_input()
         game.screen.blit(self.image, self.rect) # Surfaceオブジェクトにblit
 
 class Bullet(sprite.Sprite): # 弾
@@ -601,7 +601,7 @@ class SpaceInvaders(object):
             if self.should_exit(e):
                 sys.exit()
             if e.type == KEYDOWN:
-                if e.key == K_SPACE:
+                if e.key == K_s:
                     if len(self.bullets) == 0 and self.shipAlive:
                         if self.score <= 1990: # 点数が1500点まで
                             bullet = Bullet(self.player.rect.x + 23, self.player.rect.y + 5, -1, 15, 'laser', 'center')
@@ -639,10 +639,7 @@ class SpaceInvaders(object):
                         
 
             if e.type == KEYUP:
-                if e.key == K_LEFT: # キーアップでplayerの横移動の加速速度vxを初期値に戻す
-                    if self.shipAlive:
-                        self.player.vx = SHIP_VX
-                if e.key == K_RIGHT: # キーアップでplayerの横移動の加速速度vxを初期値に戻す
+                if e.key == K_d or K_a: # キーアップでplayerの横移動の加速速度vxをSHIP_VX(初期値)に戻す
                     if self.shipAlive:
                         self.player.vx = SHIP_VX
 
