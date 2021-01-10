@@ -431,7 +431,7 @@ class ShipExplosion(sprite.Sprite):
             game.screen.blit(self.image2, self.rect)
         elif 1400 < passed <= 1600:
             game.screen.blit(self.image, self.rect)
-        elif 1800 > passed:
+        elif 1800 < passed:
             self.kill()
 
 
