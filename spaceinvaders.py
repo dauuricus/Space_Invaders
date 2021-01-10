@@ -646,8 +646,7 @@ class SpaceInvaders(object):
                         
             if e.type == KEYUP:
                 if e.key == K_d or K_a:# キーアップでplayerの横移動の加速速度vxを初期値に戻す
-                    if self.shipAlive:
-                    	self.player.vx = SHIP_VX
+                    self.player.vx = SHIP_VX
 
 
     def make_enemies(self):
