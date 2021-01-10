@@ -59,7 +59,7 @@ class Ship(sprite.Sprite): # playerのアイコン
             # self.rect.x -= self.speed # 左移動
             self.vx += self.speed
             self.dist_x = (self.rect.x - self.vx)
-            self.rect.x += (-(-(self.dist_x - self.rect.x))//4)
+            self.rect.x += (-(-(self.dist_x - self.rect.x))//3)
             if self.rect.x < 10: # 画面左端まできたら止まる
                 self.rect.x = 10
             # キーアップで速度vxをSHIP_VXに戻す check_input()
@@ -67,7 +67,7 @@ class Ship(sprite.Sprite): # playerのアイコン
             # self.rect.x += self.speed # 右移動
             self.vx += self.speed
             self.dist_x = (self.rect.x + self.vx)
-            self.rect.x += (-(-(self.dist_x - self.rect.x))//4)
+            self.rect.x += (-(-(self.dist_x - self.rect.x))//3)
             if self.rect.x > 740: # 画面右端まできたら止まる
                 self.rect.x = 740
             # キーアップで速度vxをSHIP_VXに戻す　check_input()
@@ -415,23 +415,23 @@ class ShipExplosion(sprite.Sprite):
 
     def update(self, current_time, *args):
         passed = current_time - self.timer
-        if passed <= 200:
+        if passed <= 100:
             game.screen.blit(self.image, self.rect)
-        elif 200 < passed <= 400:
+        elif 100 < passed <= 200:
             game.screen.blit(self.image2, self.rect)
-        elif 4000< passed <= 600:
+        elif 200< passed <= 300:
             game.screen.blit(self.image3, self.rect)
-        elif 600 < passed <= 800:
+        elif 300 < passed <= 400:
             game.screen.blit(self.image2, self.rect)
-        elif 800 < passed <= 1000:
+        elif 400 < passed <= 500:
             game.screen.blit(self.image, self.rect)
-        elif 1000 < passed <= 1200:
+        elif 500 < passed <= 600:
             game.screen.blit(self.image3, self.rect)
-        elif 1200 < passed <= 1400:
+        elif 600 < passed <= 700:
             game.screen.blit(self.image2, self.rect)
-        elif 1400 < passed <= 1600:
-            game.screen.blit(self.image, self.rect)
-        elif 1800 < passed:
+        elif 700 < passed <= 800:
+            game.screen.blit(self.image3, self.rect)
+        elif 800 < passed:
             self.kill()
 
 
@@ -472,7 +472,14 @@ class SpaceInvaders(object):
         self.enemyPosition = ENEMY_DEFAULT_POSITION
         self.titleText = Text(FONT, 50, 'Space Invaders', WHITE, 164, 155)
         self.titleText2 = Text(FONT, 25, 'Press any key to continue', WHITE, 201, 225)
-        self.gameOverText = Text(FONT, 50, 'Game Over', WHITE, 250, 270)
+        self.gameOverText = Text(FONT, 50, 'Game Over', RED, 250, 270)
+        self.gameOverText0 = Text(FONT, 50, 'G', RED, 250, 270)
+        self.gameOverText1 = Text(FONT, 50, 'Ga', RED, 250, 270)
+        self.gameOverText2 = Text(FONT, 50, 'Gam', RED, 250, 270)
+        self.gameOverText3 = Text(FONT, 50, 'Game', RED, 250, 270)
+        self.gameOverText4 = Text(FONT, 50, 'Game O', RED, 250, 270)
+        self.gameOverText5 = Text(FONT, 50, 'Game Ov', RED, 250, 270)
+        self.gameOverText6 = Text(FONT, 50, 'Game Ove', RED, 250, 270)
         self.nextRoundText = Text(FONT, 50, 'Next Round', WHITE, 240, 270)
         self.enemy1Text = Text(FONT, 25, '   =   10 pts', GREEN, 368, 270)
         self.enemy2Text = Text(FONT, 25, '   =   20 pts', BLUE, 368, 320)
@@ -638,11 +645,9 @@ class SpaceInvaders(object):
                         self.sounds['shoot2'].play()
                         
             if e.type == KEYUP:
-                if e.key == K_d:
-                	 #if self.shipAlive:
+                if e.key == K_d or K_a:# キーアップでplayerの横移動の加速速度vxを初期値に戻す
+                    if self.shipAlive:
                     	self.player.vx = SHIP_VX
-                elif e.key == K_a:# キーアップでplayerの横移動の加速速度vxを初期値に戻す
-                	self.player.vx = SHIP_VX
 
 
     def make_enemies(self):
@@ -704,7 +709,6 @@ class SpaceInvaders(object):
         for player in sprite.groupcollide(self.playerGroup, self.enemyBullets, True, True).keys():
             self.sounds['shipexplosion'].play()
             ShipExplosion(player, self.explosionsGroup)
-            
             if self.life3.alive():
                 self.life3.kill()
             elif self.life2.alive():
@@ -712,8 +716,8 @@ class SpaceInvaders(object):
             elif self.life1.alive():
                 self.life1.kill()
             else:
-                self.gameOver = True
-                self.startGame = False
+            	self.gameOver = True
+            	self.startGame = False
             
             self.makeNewShip = True
             self.shipTimer = time.get_ticks()
@@ -721,6 +725,7 @@ class SpaceInvaders(object):
             
         if self.enemies.bottom >= 540:
             sprite.groupcollide(self.enemies, self.playerGroup, True, True)
+
             if not self.player.alive() or self.enemies.bottom >= 600:
                 self.gameOver = True
                 self.startGame = False
@@ -735,7 +740,7 @@ class SpaceInvaders(object):
             sprite.groupcollide(self.enemies, self.allBlockers, False, True)
 
     def create_new_ship(self, createShip, currentTime):
-        if createShip and (currentTime - self.shipTimer > 1800):
+        if createShip and (currentTime - self.shipTimer > 1600):
             self.player = Ship()
             self.allSprites.add(self.player)
             self.playerGroup.add(self.player)
@@ -746,17 +751,24 @@ class SpaceInvaders(object):
         
         # ゲームオーバーの文字を点滅
         passed = currentTime - self.timer        	
-        if 1800 < passed < 2500:
-        	self.screen.blit(self.background, (0, 0))
-        elif 2500 < passed < 3500:
+        if 900 < passed < 1000:
+        	self.gameOverText0.draw(self.screen)
+        elif 1000 < passed < 1100:
+            self.gameOverText1.draw(self.screen)
+        elif 1100 < passed < 1200:
+            self.gameOverText2.draw(self.screen)
+        elif 1200 < passed < 1300:
+            self.gameOverText3.draw(self.screen)
+        elif 1300 < passed < 1400:
+            self.gameOverText4.draw(self.screen)
+        elif 1500 < passed < 1600:
+            self.gameOverText5.draw(self.screen)
+            #self.screen.blit(self.background, (0, 0))
+        elif 1600 < passed < 1700:
+            self.gameOverText6.draw(self.screen)
+        elif 1700 < passed < 1800:
             self.gameOverText.draw(self.screen)
-        elif 3500 < passed < 4000:
-            self.screen.blit(self.background, (0, 0))
-        elif 4000 < passed < 4500:
-            self.gameOverText.draw(self.screen)
-        elif 4500 < passed < 5000:
-            self.screen.blit(self.background, (0, 0))
-        elif passed > 6000:
+        elif passed > 4000:
             self.mainScreen = True # メイン画面へ
 
         for e in event.get():
