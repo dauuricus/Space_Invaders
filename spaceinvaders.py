@@ -2,7 +2,7 @@
 
 # Space Invaders
 # Created by Lee Robinson
-# 
+# MOD BY haywhnk
 
 from pygame import *
 import sys
